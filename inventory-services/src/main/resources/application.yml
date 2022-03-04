@@ -1,0 +1,36 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: LogAccount
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    hiberanate:
+      ddl-auto: update
+    generate-ddl: true
+  datasource:
+    url: jdbc:mysql://localhost:3307/BankOInventory?createDatabaseIfNotExist=true
+    username: root
+    password: admin
+  kafka:
+    listener:
+      ack-mode: manual_immediate
+    consumer:
+      bootstrap-servers: localhost:29092
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers:  localhost:29092
+      function:
+        definition : inventoryEventConsumer
+      bindings:
+        inventoryEventConsumer-out-0 :
+          destination: inventory-event
+        inventoryEventConsumer-in-0 :
+          destination: payment-producer-event
+          group: inventoryConsumer
+server:
+  port: 7084
